@@ -15,6 +15,19 @@ export class TodoListComponent {
   newTaskTitle: string = '';
   editTaskId: number | null = null;
 
+  // Variables relacionadas al prompt de instalación
+  deferredPrompt: any;
+  showInstallButton = false;
+
+  constructor() {
+    // Escuchar el evento 'beforeinstallprompt'
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+      this.showInstallButton = true; // Muestra el botón de instalación
+    });
+  }
+
   addTask() {
     if (this.newTaskTitle.trim() === '') return;
 
@@ -50,6 +63,20 @@ export class TodoListComponent {
   editTask(task: Task) {
     this.newTaskTitle = task.title; // Carga el título de la tarea en el input
     this.editTaskId = task.id; // Guarda el ID de la tarea a editar
+  }
+  installPWA() {
+    this.showInstallButton = false; // Oculta el botón
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt(); // Muestra el cuadro de diálogo de instalación
+      this.deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('PWA instalada');
+        } else {
+          console.log('PWA no instalada');
+        }
+        this.deferredPrompt = null;
+      });
+    }
   }
 }
 

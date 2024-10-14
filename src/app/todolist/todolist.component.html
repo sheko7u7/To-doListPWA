@@ -1,4 +1,4 @@
-<div class="todo-container">
+¿<div class="todo-container">
   <h1>To-Do List</h1>
   <input [(ngModel)]="newTaskTitle" placeholder="Agregar nueva tarea" />
   <button (click)="addTask()">Agregar</button>
@@ -12,3 +12,6 @@
     </li>
   </ul>
 </div>
+
+<!-- Botón de instalación en la parte superior derecha -->
+<button *ngIf="showInstallButton" class="install-btn" (click)="installPWA()">Desea instalar la App? Guapo? 7u7</button>
