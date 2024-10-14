@@ -11,4 +11,30 @@ import { TodoListComponent } from "./todolist/todolist.component";
 })
 export class AppComponent {
   title = 'ToDoListPWA';
+
+  deferredPrompt: any;
+  showInstallButton = false;
+
+  constructor() {
+    window.addEventListener('beforeinstallprompt', (event: any) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+      this.showInstallButton = true;
+    });
+  }
+
+  installPWA() {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt.userChoice.then((choiceResult: any) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the install prompt');
+        } else {
+          console.log('User dismissed the install prompt');
+        }
+        this.deferredPrompt = null;
+        this.showInstallButton = false;
+      });
+    }
+  }
 }
